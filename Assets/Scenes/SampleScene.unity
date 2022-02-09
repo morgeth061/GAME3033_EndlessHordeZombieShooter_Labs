@@ -9428,7 +9428,7 @@ MonoBehaviour:
   runSpeed: 10
   jumpForce: 5
   followTarget: {fileID: 1622434258}
-  aimSensitivity: 1
+  aimSensitivity: 0.1
 --- !u!4 &8948792008332343940
 Transform:
   m_ObjectHideFlags: 0

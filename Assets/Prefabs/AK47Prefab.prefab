@@ -45,6 +45,22 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   gripLocation: {fileID: 1094569513698284038}
+  weaponStats:
+    WeaponType: 2
+    weaponName: AK-47
+    damage: 35
+    bulletsInClip: 30
+    clipSize: 30
+    fireStartDelay: 0.07
+    fireRate: 0.125
+    weaponFiringPattern: 1
+    fireDistance: 500
+    repeating: 1
+    weaponHitLayers:
+      serializedVersion: 2
+      m_Bits: 4294967295
+  isFiring: 0
+  isReloading: 0
 --- !u!1 &8125389965408480397
 GameObject:
   m_ObjectHideFlags: 0
