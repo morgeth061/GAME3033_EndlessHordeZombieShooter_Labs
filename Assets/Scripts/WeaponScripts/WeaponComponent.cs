@@ -31,13 +31,17 @@ public struct WeaponStats
     public float fireDistance;
     public bool repeating;
     public LayerMask weaponHitLayers;
+    public int totalBullets;
 }
 
 public class WeaponComponent : MonoBehaviour
 {
     public Transform gripLocation;
+    public Transform firingEffectLocation;
 
     protected WeaponHolder weaponHolder;
+    [SerializeField]
+    protected ParticleSystem firingEffect;
 
     [SerializeField] 
     public WeaponStats weaponStats;
@@ -45,10 +49,19 @@ public class WeaponComponent : MonoBehaviour
     public bool isFiring = false;
     public bool isReloading = false;
     protected Camera mainCamera;
-    
+
+    void Start()
+    {
+        
+    }
+
     void Awake()
     {
         mainCamera = Camera.main;
+        if (firingEffect.isPlaying)
+        {
+            firingEffect.Stop();
+        }
     }
 
     // Update is called once per frame
@@ -79,11 +92,46 @@ public class WeaponComponent : MonoBehaviour
     public virtual void StopFiringWeapon()
     {
         isFiring = false;
+        CancelInvoke(nameof(FireWeapon));
+        if (firingEffect.isPlaying)
+        {
+            firingEffect.Stop();
+        }
     }
 
     protected virtual void FireWeapon()
     {
         print("Firing Weapon");
         weaponStats.bulletsInClip--;
+    }
+
+    public virtual void StartReloading()
+    {
+        isReloading = true;
+        ReloadWeapon();
+    }
+
+    public virtual void StopReloading()
+    {
+        isReloading = false;
+    }
+
+    protected virtual void ReloadWeapon()
+    {
+        if (firingEffect.isPlaying)
+        {
+            firingEffect.Stop();
+        }
+        int bulletsToReload = weaponStats.clipSize - weaponStats.totalBullets;
+        if (bulletsToReload < 0)
+        {
+            weaponStats.bulletsInClip = weaponStats.clipSize;
+            weaponStats.totalBullets -= weaponStats.clipSize;
+        }
+        else
+        {
+            weaponStats.bulletsInClip = weaponStats.totalBullets;
+            weaponStats.totalBullets = 0;
+        }
     }
 }

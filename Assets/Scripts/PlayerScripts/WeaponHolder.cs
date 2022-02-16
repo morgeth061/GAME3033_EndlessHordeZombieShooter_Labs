@@ -36,6 +36,7 @@ public class WeaponHolder : MonoBehaviour
 
         equippedWeapon = spawnedWeapon.GetComponent<WeaponComponent>();
         equippedWeapon.Initialize(this);
+        PlayerEvents.InvokeOnWeaponEquipped(equippedWeapon);
         gripIKSocketLocation = equippedWeapon.gripLocation;
     }
 
@@ -70,6 +71,7 @@ public class WeaponHolder : MonoBehaviour
     {
         if (equippedWeapon.weaponStats.bulletsInClip <= 0)
         {
+            StartReloading();
             return;
         }
         playerController.isFiring = true;
@@ -84,14 +86,41 @@ public class WeaponHolder : MonoBehaviour
         equippedWeapon.StopFiringWeapon();
     }
 
+    //Input System Reload
     public void OnReload(InputValue value)
     {
         playerController.isReloading = value.isPressed;
-        animator.SetBool(isReloadingHash, playerController.isReloading);
+        StartReloading();
     }
 
     public void StartReloading()
     {
+        if (playerController.isFiring)
+        {
+            StopFiring();
+        }
 
+        if (equippedWeapon.weaponStats.totalBullets <= 0)
+        {
+            return;
+        }
+
+        animator.SetBool(isReloadingHash, true);
+        equippedWeapon.StartReloading();
+
+        InvokeRepeating(nameof(StopReloading), 0, 0.1f);
+    }
+
+    public void StopReloading()
+    {
+        if (animator.GetBool(isReloadingHash))
+        {
+            return;
+        }
+
+        playerController.isReloading = false;
+        equippedWeapon.StopReloading();
+        animator.SetBool(isReloadingHash, false);
+        CancelInvoke(nameof(StopReloading));
     }
 }
