@@ -39,6 +39,11 @@ public class MovementComponent : MonoBehaviour
         playerAnimator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody>();
         playerController = GetComponent<PlayerController>();
+
+        if (!GameManager.instance.cursorActive)
+        {
+            AppEvents.InvokeMouseCursorEnable(false);
+        }
     }
     // Start is called before the first frame update
     void Start()
@@ -123,7 +128,7 @@ public class MovementComponent : MonoBehaviour
         lookInput = value.Get<Vector2>();
         print(lookInput.y);
         //playerAnimator.SetFloat(aimVerticalHash, lookInput.y);
-        playerAnimator.SetFloat(aimVerticalHash, 1.0f);
+        //playerAnimator.SetFloat(aimVerticalHash, 1.0f);
         //if we aim up, down, adjust animations to have a mask that will let us properly animate aim
     }
 
